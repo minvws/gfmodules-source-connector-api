@@ -1,0 +1,40 @@
+[app]
+loglevel=debug
+
+[ratelimit]
+enabled = False
+redis_host = localhost
+redis_port = 6379
+redis_db = 0
+default_reqs = 300
+default_window = 60
+circuit_break_threshold = 10
+circuit_break_window = 60
+circuit_break_duration = 300
+half_open_allowance = 5
+
+
+[telemetry]
+enabled = False
+endpoint = http://tracing:4317
+service_name = Adressering Register
+tracer_name = zmodules.service.source-connector-api
+
+[stats]
+enabled = False
+host = graphite
+port = 8125
+module_name = source-connector-api
+
+[uvicorn]
+swagger_enabled = True
+docs_url = /docs
+redoc_url = /redocs
+host = 0.0.0.0
+port = 8520
+reload = True
+
+use_ssl = False
+ssl_base_dir = secrets/ssl
+ssl_cert_file = server.cert
+ssl_key_file = server.key

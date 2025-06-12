@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "gfmodules-source-connector-api"
+version = "0.1.0"
+description = ""
+license = "EUPL-1.2"
+authors = ["Ministerie van Volksgezondheid, Welzijn en Sport"]
+repository = "https://github.com/minvws/gfmodules-source-connector-api"
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+uvicorn = "^0.34.3"
+fastapi = "^0.115.12"
+mypy = "^1.16.0"
+inject = "^5.2.0"
+opentelemetry-sdk = "^1.34.0"
+opentelemetry-exporter-otlp-proto-grpc = "^1.34.0"
+opentelemetry-instrumentation = "^0.55b1"
+opentelemetry-instrumentation-fastapi = "^0.55b1"
+opentelemetry-instrumentation-requests = "^0.55b1"
+requests = "^2.32.0"
+statsd = "^4.0.1"
+poetry-core = "^2.1.3"
+pydantic-settings = "^2.9.1"
+redis = "^6.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-cov = "^6.1.1"
+pytest-mock = "^3.14.1"
+httpx = "^0.28.1"
+ruff = "0.11.12"
+safety = "^3.2.14"
+codespell = "^2.4.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+cache-dir = "~/.cache/ruff"
+include = ["pyproject.toml", "app/*.py", "tests/*.py"]
+line-length = 120
+
+[tool.mypy]
+files = "app,tests"
+python_version = "3.11"
+strict = true
+cache_dir = "~/.cache/mypy"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+cache_dir = "~/.cache/pytest"
+testpaths = ["tests"]
