@@ -14,7 +14,7 @@ def RateLimit(
 ):
     def decorator(func):
         @wraps(func)
-        async def wrapper(request: Request, *args, **kwargs):
+        def wrapper(request: Request, *args, **kwargs):
             key = key_func(request) if key_func else request.client.host
 
             # Check if the rate limiter (and/or circuit breaker) is triggered
@@ -26,7 +26,7 @@ def RateLimit(
                 else:
                     raise HTTPException(503, detail="Service temporarily unavailable")
 
-            response = await func(request, *args, **kwargs)
+            response = func(request, *args, **kwargs)
 
             # Record success or error based on response status. This will be used in the circuit breaking logic.
             if response.status_code >= 400:
