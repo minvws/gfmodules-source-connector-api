@@ -1,0 +1,17 @@
+# run with `caddy run --config Caddyfile` for testing mTLS on port 8521
+{
+	debug
+	local_certs
+	auto_https off
+}
+
+:8521 {
+	tls secrets/server.crt secrets/server.key {
+		client_auth {
+			mode require_and_verify
+			trusted_ca_cert_file secrets/ca.crt
+		}
+	}
+
+	reverse_proxy localhost:8520
+}

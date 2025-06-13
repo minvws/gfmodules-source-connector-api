@@ -50,7 +50,6 @@ class RateLimiter:
 
     def _get_state(self, circuit_key: str) -> CircuitState:
         state = self.redis.hget(circuit_key, "state")
-        print(f"Current state for key {circuit_key}: {state}")
         return CircuitState(state.decode('utf-8')) if state else CircuitState.CLOSED
 
     def record_success(self, key: str) -> None:
@@ -70,14 +69,12 @@ class RateLimiter:
         circuit_key = self._get_circuit_key(key)
         now = time.time()
         state = self._get_state(circuit_key)
-        print(f"Recording error for key: {key}, current state: {state.name}")
 
         if state == CircuitState.HALF_OPEN:
             with self.redis.pipeline() as pipe:
                 pipe.hset(circuit_key, "state", CircuitState.OPEN.value)
                 pipe.hset(circuit_key, "opened_at", now)
                 pipe.execute()
-            print("blaat")
             return
 
 
@@ -88,7 +85,6 @@ class RateLimiter:
             pipe.execute()
 
         error_count = self.redis.zcard(error_count_key) or 0
-        print(f"Error count for key {key}: {error_count}")
         if error_count >= self.circuit_break_threshold:
             circuit_key = self._get_circuit_key(key)
             with self.redis.pipeline() as pipe:
@@ -141,7 +137,6 @@ class RateLimiter:
 
         allowed, reason = self.check_circuit(key)
         if not allowed:
-            print(f"Circuit is {reason} for key: {key}")
             return RateLimitResult(allowed=False, reason=reason)
 
         rate_limit_key = self._get_rate_limit_key(key)
