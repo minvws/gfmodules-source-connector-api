@@ -26,7 +26,7 @@ def enrich(request: Request) -> Response:
         request_data = sync_get_json(request)
     except Exception as e:
         logger.error(f"Failed to parse request data: {e}")
-        return JSONResponse({"error": "Invalid JSON data"}, status_code=400)
+        return JSONResponse({"error": "Invalid JSON data"}, status_code=422)
 
     connector = KvkConnector({
         "api_url": "https://api.kvk.nl",

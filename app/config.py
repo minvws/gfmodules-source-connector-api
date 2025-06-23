@@ -24,20 +24,20 @@ class ConfigUvicorn(BaseModel):
     docs_url: str = Field(default="/docs")
     redoc_url: str = Field(default="/redoc")
     host: str = Field(default="0.0.0.0")
-    port: int = Field(default=8501, gt=0, lt=65535)
+    port: int = Field(default=8520, gt=0, lt=65535)
     reload: bool = Field(default=True)
     reload_delay: float = Field(default=1)
     reload_dirs: list[str] = Field(default=["app"])
     use_ssl: bool = Field(default=False)
-    ssl_base_dir: str | None
-    ssl_cert_file: str | None
-    ssl_key_file: str | None
+    ssl_base_dir: str | None = Field(default=None)
+    ssl_cert_file: str | None = Field(default=None)
+    ssl_key_file: str | None = Field(default=None)
 
 
 class ConfigRateLimiter(BaseModel):
     enabled: bool = Field(default=False)
-    redis_host: str | None
-    redis_port: int | None
+    redis_host: str | None = Field(default=None)
+    redis_port: int | None = Field(default=None, ge=0, lt=65535)
     redis_db: int = Field(default=0, ge=0)
     default_reqs: int = Field(default=100, gt=0)
     default_window: int = Field(default=60, gt=0)
@@ -45,16 +45,16 @@ class ConfigRateLimiter(BaseModel):
 
 class ConfigTelemetry(BaseModel):
     enabled: bool = Field(default=False)
-    endpoint: str | None
-    service_name: str | None
-    tracer_name: str | None
+    endpoint: str | None = Field(default=None)
+    service_name: str | None = Field(default=None)
+    tracer_name: str | None = Field(default=None)
 
 
 class ConfigStats(BaseModel):
     enabled: bool = Field(default=False)
-    host: str | None
-    port: int | None
-    module_name: str | None
+    host: str | None = Field(default=None)
+    port: int | None = Field(default=None, gt=0, lt=65535)
+    module_name: str | None = Field(default=None)
 
 
 class Config(BaseModel):
