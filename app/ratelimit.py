@@ -20,13 +20,15 @@ def RateLimit(
             # Check if the rate limiter (and/or circuit breaker) is triggered
             limiter = get_rate_limiter()
             result = limiter.limit(key, reqs, window)
-            if result.allowed == False:
+            if result.allowed is False:
                 if result.reason == "rate_limit_exceeded":
-                    raise HTTPException(429, detail=f"Too many requests")
+                    raise HTTPException(429, detail="Too many requests")
                 else:
                     raise HTTPException(503, detail="Service temporarily unavailable")
 
             response = func(request, *args, **kwargs)
+            if limiter.enabled is False:
+                return response
 
             # Record success or error based on response status. This will be used in the circuit breaking logic.
             if response.status_code >= 400:

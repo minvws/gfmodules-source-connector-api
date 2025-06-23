@@ -17,22 +17,25 @@ class KvkConnector(SourceConnector):
         """
         print("Connecting to KVK API at", self.api_url)
 
-    def enrich(self, data: dict) -> dict:
+    def enrich(self, userinfo: dict) -> dict:
         """
-        Fetch data from the KVK API based on the provided data.
+        Fetch data from the KVK API based on the provided userinfo.
 
-        :param data: Data to enrich.
+        :param userinfo: User information to enrich.
         :return: Enriched data.
         """
-        data['kvk_enriched'] = {
+        userinfo = self.__parse_userinfo(userinfo)
+
+        data = {
             "company_name": "Example Company",
-            "kvk_number": "12345678",
             "address": "123 Example Street, Example City",
             "status": "Active",
             "registration_date": "2020-01-01",
         }
 
-        return data
+        userinfo.update(data)
+
+        return userinfo
 
     def close(self):
         """
@@ -40,4 +43,23 @@ class KvkConnector(SourceConnector):
         """
         print("Closing connection to KVK API")
 
+    def __parse_userinfo(self, userinfo: dict) -> dict:
+        """
+        Parse the userinfo dictionary to extract relevant fields for KVK API.
+        Different login methods result in different userinfo structures,
+        so we need to handle various possible keys.
+
+        :param userinfo: User information dictionary.
+        :return: Parsed user information.
+        """
+        possible_keys = [
+            "kvk_number",
+            "organization_code",
+        ]
+
+        for key in possible_keys:
+            if key in userinfo and userinfo[key]:
+                return {"kvk_number": userinfo[key]}
+
+        raise ValueError("No valid KVK identifier found in userinfo")
 

@@ -10,8 +10,8 @@ class ZorgABConnector(SourceConnector):
         print("Connecting to Zorg AB API at", self.api_url)
 
 
-    def enrich(self, data: dict) -> dict:
-        data['zorgab_enriched'] = {
+    def enrich(self, userinfo: dict) -> dict:
+        data = {
             "zorg_name": "Example Zorg",
             "zorg_number": "87654321",
             "address": "456 Zorg Street, Zorg City",
