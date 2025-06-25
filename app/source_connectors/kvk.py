@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from app.source_connector import SourceConnector
 
 
@@ -6,18 +8,18 @@ class KvkConnector(SourceConnector):
     Connector for the KVK (Kamer van Koophandel) API.
     """
 
-    def __init__(self, config: dict):
+    def __init__(self, config: Dict[str, str]) -> None:
         super().__init__(config)
-        self.api_url = config.get("api_url", "https://api.kvk.nl")
-        self.api_key = config.get("api_key")
+        self.api_url: str = config.get("api_url", "https://api.kvk.nl")
+        self.api_key: str = config.get("api_key", "")
 
-    def connect(self):
+    def connect(self) -> None:
         """
         Establish a connection to the KVK API.
         """
         print("Connecting to KVK API at", self.api_url)
 
-    def enrich(self, userinfo: dict) -> dict:
+    def enrich(self, userinfo: Dict[str, Any]) -> Dict[str, Any]:
         """
         Fetch data from the KVK API based on the provided userinfo.
 
@@ -37,17 +39,15 @@ class KvkConnector(SourceConnector):
 
         return userinfo
 
-    def close(self):
+    def close(self) -> None:
         """
         Close the connection to the KVK API.
         """
         print("Closing connection to KVK API")
 
-    def __parse_userinfo(self, userinfo: dict) -> dict:
+    def __parse_userinfo(self, userinfo: Dict[str, Any]) -> Dict[str, Any]:
         """
         Parse the userinfo dictionary to extract relevant fields for KVK API.
-        Different login methods result in different userinfo structures,
-        so we need to handle various possible keys.
 
         :param userinfo: User information dictionary.
         :return: Parsed user information.
@@ -62,4 +62,3 @@ class KvkConnector(SourceConnector):
                 return {"kvk_number": userinfo[key]}
 
         raise ValueError("No valid KVK identifier found in userinfo")
-

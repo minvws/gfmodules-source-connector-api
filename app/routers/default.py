@@ -6,7 +6,6 @@ from fastapi import APIRouter, Response
 from starlette.requests import Request
 
 from app import ratelimit
-from app.container import get_rate_limiter
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -21,6 +20,7 @@ LOGO = r"""
 \____/ \___/ \__,_|_|  \___\___|\____/\___/|_| |_|_| |_|\___|\___|\__\___/|_|
 
 """
+
 
 @router.get("/")
 @ratelimit.RateLimit(reqs=10, window=60)

@@ -1,6 +1,6 @@
 # Rate Limiter and Circuit Breaker
 
-The system has a build-in rate limiter and circuit breaker to manage the load and ensure stability. The rate limiter controls the number of requests that can be processed within a
+The system has a built-in rate limiter and circuit breaker to manage the load and ensure stability. The rate limiter controls the number of requests that can be processed within a
 given time frame, while the circuit breaker prevents the system from being overwhelmed by temporarily blocking requests when certain thresholds are exceeded.
 
 The following default configurations are applied:
