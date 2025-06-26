@@ -1,6 +1,9 @@
+import logging
 from typing import Any, Dict
 
 from app.source_connector import SourceConnector
+
+logger = logging.getLogger(__name__)
 
 
 class KvkConnector(SourceConnector):
@@ -17,7 +20,7 @@ class KvkConnector(SourceConnector):
         """
         Establish a connection to the KVK API.
         """
-        print("Connecting to KVK API at", self.api_url)
+        logger.info("Connecting to KVK API at", self.api_url)
 
     def enrich(self, userinfo: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -43,7 +46,7 @@ class KvkConnector(SourceConnector):
         """
         Close the connection to the KVK API.
         """
-        print("Closing connection to KVK API")
+        logger.info("Closing connection to KVK API")
 
     def __parse_userinfo(self, userinfo: Dict[str, Any]) -> Dict[str, Any]:
         """

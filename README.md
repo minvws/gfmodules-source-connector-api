@@ -64,5 +64,5 @@ into the container's /src dir.
 
 
 # Using the plugin system
-You can have multiple sources (called plugins) activated. To use them, use the `/enricht/<plugin>` endpoint.
+You can have multiple sources (called plugins) activated. To use them, use the `/enrich/<plugin>` endpoint.
 For instance:   `/enrich/zorgab`  or `/enrich/kvk` will use the `zorgab` or `kvk` plugin respectively.

@@ -23,8 +23,8 @@ class RateLimitResult:
 class RateLimiter:
     def __init__(
         self,
+        redis_client: redis.Redis,
         enabled: bool = True,
-        redis_client: Optional[redis.Redis] = None,
         default_reqs: int = 100,
         default_window: int = 60,
         circuit_break_threshold: int = 10,
@@ -32,8 +32,6 @@ class RateLimiter:
         circuit_break_duration: int = 300,
         half_open_allowance: int = 5,
     ):
-        if redis_client is None:
-            raise ValueError("Redis client must be provided")
         self.redis = redis_client
         self.enabled = enabled
         self.default_reqs = default_reqs

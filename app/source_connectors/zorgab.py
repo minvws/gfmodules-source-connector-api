@@ -1,8 +1,11 @@
+import logging
 from typing import Any, Dict
 
 import requests
 
 from app.source_connector import SourceConnector
+
+logger = logging.getLogger(__name__)
 
 
 class ZorgABConnector(SourceConnector):
@@ -14,7 +17,7 @@ class ZorgABConnector(SourceConnector):
         self.mtls_ca: str = config.get("mtls_ca", "")
 
     def connect(self) -> None:
-        print("Connecting to Zorg AB API at", self.api_url)
+        logger.info("Connecting to Zorg AB API at", self.api_url)
 
     def enrich(self, data: Dict[str, Any]) -> Dict[str, Any]:
         if not self.api_url:
@@ -37,15 +40,15 @@ class ZorgABConnector(SourceConnector):
             bundle = response.json()
 
             if "resourceType" not in bundle or "entry" not in bundle:
-                print("No valid bundle found in response")
+                logger.warning("No valid bundle found in response")
                 return data
 
             if bundle["resourceType"] != "Bundle":
-                print("Response is not a valid Bundle resource")
+                logger.warning("Response is not a valid Bundle resource")
                 return data
 
             if len(bundle["entry"]) == 0:
-                print("No entries found in the bundle")
+                logger.warning("No entries found in the bundle")
                 return data
 
             entry = bundle["entry"][0]
@@ -62,10 +65,10 @@ class ZorgABConnector(SourceConnector):
                 }
 
         except Exception as e:
-            print(f"Error connecting to Zorg AB API: {e}")
+            logger.error(f"Error connecting to Zorg AB API: {e}")
             raise
 
         return data
 
     def close(self) -> None:
-        print("Closing connection to Zorg AB API")
+        logger.info("Closing connection to Zorg AB API")
