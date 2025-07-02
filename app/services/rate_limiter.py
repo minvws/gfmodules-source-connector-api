@@ -5,10 +5,12 @@ from typing import Optional, Tuple
 
 import redis
 
+
 class CircuitState(Enum):
     CLOSED = "closed"
     OPEN = "open"
     HALF_OPEN = "half_open"
+
 
 @dataclass
 class RateLimitResult:
@@ -21,16 +23,16 @@ class RateLimitResult:
 class RateLimiter:
     def __init__(
         self,
+        redis_client: redis.Redis,
         enabled: bool = True,
-        redis: redis.Redis = None,
         default_reqs: int = 100,
         default_window: int = 60,
         circuit_break_threshold: int = 10,
         circuit_break_window: int = 60,
         circuit_break_duration: int = 300,
-        half_open_allowance: int = 5
+        half_open_allowance: int = 5,
     ):
-        self.redis = redis
+        self.redis = redis_client
         self.enabled = enabled
         self.default_reqs = default_reqs
         self.default_window = default_window
@@ -50,7 +52,7 @@ class RateLimiter:
 
     def _get_state(self, circuit_key: str) -> CircuitState:
         state = self.redis.hget(circuit_key, "state")
-        return CircuitState(state.decode('utf-8')) if state else CircuitState.CLOSED
+        return CircuitState(state) if state else CircuitState.CLOSED
 
     def record_success(self, key: str) -> None:
         circuit_key = self._get_circuit_key(key)
@@ -65,56 +67,56 @@ class RateLimiter:
                 pipe.execute()
 
     def record_error(self, key: str) -> None:
+        now = time.time()
         error_count_key = self._get_error_count_key(key)
         circuit_key = self._get_circuit_key(key)
-        now = time.time()
         state = self._get_state(circuit_key)
 
         if state == CircuitState.HALF_OPEN:
             with self.redis.pipeline() as pipe:
                 pipe.hset(circuit_key, "state", CircuitState.OPEN.value)
-                pipe.hset(circuit_key, "opened_at", now)
+                pipe.hset(circuit_key, "opened_at", str(now))
                 pipe.execute()
             return
 
-
         with self.redis.pipeline() as pipe:
-            pipe.zadd(error_count_key, {now: now})
+            pipe.zadd(error_count_key, {str(now): now})
             pipe.zremrangebyscore(error_count_key, 0, now - self.circuit_break_window)
             pipe.expire(error_count_key, self.circuit_break_window)
             pipe.execute()
 
-        error_count = self.redis.zcard(error_count_key) or 0
-        if error_count >= self.circuit_break_threshold:
-            circuit_key = self._get_circuit_key(key)
+        error_count = self.redis.zcard(error_count_key)
+        if error_count >= self.circuit_break_threshold:  # type: ignore
             with self.redis.pipeline() as pipe:
                 pipe.hset(circuit_key, "state", CircuitState.OPEN.value)
-                pipe.hset(circuit_key, "opened_at", now)
+                pipe.hset(circuit_key, "opened_at", str(now))
                 pipe.execute()
 
     def check_circuit(self, key: str) -> Tuple[bool, Optional[str]]:
         circuit_key = self._get_circuit_key(key)
-        # error_count_key = self._get_error_count_key(key)
         state = self._get_state(circuit_key)
 
         if state == CircuitState.OPEN:
-            opened_at = float(self.redis.hget(circuit_key, "opened_at") or 0)
+            raw = self.redis.hget(circuit_key, "opened_at")
+            opened_at = float(raw) if raw else 0.0  # type: ignore
             if time.time() - opened_at < self.circuit_break_duration:
                 return False, "circuit_open"
 
             with self.redis.pipeline() as pipe:
                 pipe.hset(circuit_key, "state", CircuitState.HALF_OPEN.value)
-                pipe.hset(circuit_key, "tested", 0)
+                pipe.hset(circuit_key, "tested", "0")
                 pipe.execute()
             state = CircuitState.HALF_OPEN
 
         if state == CircuitState.HALF_OPEN:
-            tested = int(self.redis.hget(circuit_key, "tested") or 0)
+            tested_raw = self.redis.hget(circuit_key, "tested")
+            tested = int(tested_raw) if tested_raw else 0  # type: ignore
+
             if tested >= self.half_open_allowance:
                 now = time.time()
                 with self.redis.pipeline() as pipe:
                     pipe.hset(circuit_key, "state", CircuitState.OPEN.value)
-                    pipe.hset(circuit_key, "opened_at", now)
+                    pipe.hset(circuit_key, "opened_at", str(now))
                     pipe.execute()
                 return False, "half_open_limit"
 
@@ -124,14 +126,7 @@ class RateLimiter:
 
         return True, None
 
-    def limit(
-        self,
-        key: str,
-        reqs: Optional[int] = None,
-        window: Optional[int] = None
-    ) -> RateLimitResult:
-
-        # Just continue when the rate limiter is not enabled
+    def limit(self, key: str, reqs: Optional[int] = None, window: Optional[int] = None) -> RateLimitResult:
         if not self.enabled:
             return RateLimitResult(allowed=True, reason="rate_limiter_disabled")
 
@@ -148,16 +143,22 @@ class RateLimiter:
         with self.redis.pipeline() as pipe:
             pipe.zremrangebyscore(rate_limit_key, 0, window_start)
             pipe.zcard(rate_limit_key)
-            pipe.zadd(rate_limit_key, {now: now})
+            pipe.zadd(rate_limit_key, {str(now): now})
             pipe.expire(rate_limit_key, window)
-            _, current_count, _, _ = pipe.execute()
+            results = pipe.execute()
 
+        current_count = results[1] if isinstance(results[1], int) else 0
         remaining = max(0, reqs - current_count)
         reset_time = window_start + window
 
         if current_count >= reqs:
             self.record_error(key)
-            return RateLimitResult(allowed=False, reason="rate_limit_exceeded", remaining=remaining, reset_time=reset_time)
+            return RateLimitResult(
+                allowed=False,
+                reason="rate_limit_exceeded",
+                remaining=remaining,
+                reset_time=reset_time,
+            )
 
         if self._get_state(self._get_circuit_key(key)) == CircuitState.HALF_OPEN:
             self.record_success(key)

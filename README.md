@@ -60,3 +60,9 @@ into the container's /src dir.
     docker run -ti --rm -p 8520:8520 \
       --mount type=bind,source=./app.conf.autopilot,target=/src/app.conf \
       gfmodules-soiurce-connector-api:latet
+
+
+
+# Using the plugin system
+You can have multiple sources (called plugins) activated. To use them, use the `/enrich/<plugin>` endpoint.
+For instance:   `/enrich/zorgab`  or `/enrich/kvk` will use the `zorgab` or `kvk` plugin respectively.

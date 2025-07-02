@@ -1,26 +1,29 @@
 from functools import wraps
-from typing import Optional
+from typing import Any, Callable, Optional, TypeVar, cast
 
 from fastapi import HTTPException
 from starlette.requests import Request
+from starlette.responses import Response
 
 from app.container import get_rate_limiter
+
+F = TypeVar("F", bound=Callable[..., Response])
 
 
 def RateLimit(
     reqs: Optional[int] = None,
     window: Optional[int] = None,
-    key_func=None,
-):
-    def decorator(func):
+    key_func: Optional[Callable[[Request], str]] = None,
+) -> Callable[[F], F]:
+    def decorator(func: F) -> F:
         @wraps(func)
-        def wrapper(request: Request, *args, **kwargs):
-            key = key_func(request) if key_func else request.client.host
+        def wrapper(request: Request, *args: Any, **kwargs: Any) -> Response:
+            key = key_func(request) if key_func else (request.client.host if request.client else "unknown")
 
-            # Check if the rate limiter (and/or circuit breaker) is triggered
             limiter = get_rate_limiter()
             result = limiter.limit(key, reqs, window)
-            if result.allowed is False:
+
+            if not result.allowed:
                 if result.reason == "rate_limit_exceeded":
                     raise HTTPException(429, detail="Too many requests")
                 else:
@@ -30,11 +33,12 @@ def RateLimit(
             if limiter.enabled is False:
                 return response
 
-            # Record success or error based on response status. This will be used in the circuit breaking logic.
             if response.status_code >= 400:
                 limiter.record_error(key)
             else:
                 limiter.record_success(key)
             return response
-        return wrapper
+
+        return cast(F, wrapper)
+
     return decorator

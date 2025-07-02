@@ -64,3 +64,16 @@ use_ssl = False
 ssl_base_dir = secrets/ssl
 ssl_cert_file = server.cert
 ssl_key_file = server.key
+
+# Plugin configurations for ZorgAB
+[plugin_zorgab]
+enabled = true
+api_url = https://zab.test.aorta-zorg.nl/zab-ro/fhir
+mtls_cert = secrets/mtls-cert.pem
+mtls_key = secrets/mtls-key.pem
+mtls_ca = secrets/uzi-ca.pem
+
+# Plugin configurations for KVK
+[plugin_kvk]
+enabled = true
+api_url = https://api.kvk.nl/api/v1/zoeken

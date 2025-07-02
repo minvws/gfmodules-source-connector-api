@@ -19,6 +19,7 @@ class LogLevel(str, Enum):
 class ConfigApp(BaseModel):
     loglevel: LogLevel = Field(default=LogLevel.info)
 
+
 class ConfigUvicorn(BaseModel):
     swagger_enabled: bool = Field(default=False)
     docs_url: str = Field(default="/docs")
@@ -57,12 +58,28 @@ class ConfigStats(BaseModel):
     module_name: str | None = Field(default=None)
 
 
+class ConfigPluginZorgAB(BaseModel):
+    enabled: bool = Field(default=False)
+    api_url: str | None = Field(default=None, description="Base URL for the Zorg AB API")
+    mtls_cert: str | None = Field(default=None, description="Path to the mTLS certificate file")
+    mtls_key: str | None = Field(default=None, description="Path to the mTLS key file")
+    mtls_ca: str | None = Field(default=None, description="Path to the mTLS CA file")
+
+
+class ConfigPluginKvk(BaseModel):
+    enabled: bool = Field(default=False)
+    api_url: str | None = Field(default=None, description="Base URL for the KVK API")
+    api_key: str | None = Field(default=None, description="API key for the KVK API")
+
+
 class Config(BaseModel):
     app: ConfigApp
     ratelimit: ConfigRateLimiter
     uvicorn: ConfigUvicorn
     telemetry: ConfigTelemetry
     stats: ConfigStats
+    plugin_zorgab: ConfigPluginZorgAB
+    plugin_kvk: ConfigPluginKvk
 
 
 def read_ini_file(path: str) -> Any:

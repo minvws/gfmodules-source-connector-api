@@ -3,7 +3,6 @@ from typing import Any
 
 from fastapi import APIRouter
 
-
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
@@ -14,8 +13,7 @@ def ok_or_error(value: bool) -> str:
 
 @router.get("/health")
 def health() -> dict[str, Any]:
-    components = {
-    }
+    components = {}  # type: ignore
     healthy = ok_or_error(all(value == "ok" for value in components.values()))
 
     return {"status": healthy, "components": components}

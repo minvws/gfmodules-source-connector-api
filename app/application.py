@@ -7,10 +7,11 @@ from fastapi import FastAPI
 from app.config import get_config
 from app.container import setup_container
 from app.routers.default import router as default_router
-from app.routers.health import router as health_router
 from app.routers.enrich import router as enrich_router
+from app.routers.health import router as health_router
 from app.stats import StatsdMiddleware, setup_stats
 from app.telemetry import setup_telemetry
+
 
 def get_uvicorn_params() -> dict[str, Any]:
     config = get_config()
@@ -53,6 +54,7 @@ def create_fastapi_app() -> FastAPI:
 def application_init() -> None:
     setup_container()
     setup_logging()
+
 
 def setup_logging() -> None:
     loglevel = logging.getLevelName(get_config().app.loglevel.upper())
