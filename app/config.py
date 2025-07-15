@@ -40,6 +40,9 @@ class ConfigRateLimiter(BaseModel):
     redis_host: str | None = Field(default=None)
     redis_port: int | None = Field(default=None, ge=0, lt=65535)
     redis_db: int = Field(default=0, ge=0)
+    redis_tls_cert: str | None = Field(default=None, description="Path to the TLS certificate for Redis")
+    redis_tls_key: str | None = Field(default=None, description="Path to the TLS key for Redis")
+    redis_tls_ca: str | None = Field(default=None, description="Path to the TLS CA file for Redis")
     default_reqs: int = Field(default=100, gt=0)
     default_window: int = Field(default=60, gt=0)
 
