@@ -11,12 +11,25 @@ from app.source_connector import SourceConnector
 def container_config(binder: inject.Binder) -> None:
     config = get_config()
 
-    redis_client = redis.Redis(
-        host=config.ratelimit.redis_host,
-        port=config.ratelimit.redis_port,
-        db=config.ratelimit.redis_db,
-        decode_responses=True,
-    )
+    if config.ratelimit.redis_tls_cert is not None:
+        redis_client = redis.Redis(
+            host=config.ratelimit.redis_host,
+            port=config.ratelimit.redis_port,
+            db=config.ratelimit.redis_db,
+            decode_responses=True,
+            ssl=True,
+            ssl_certfile=config.ratelimit.redis_tls_cert,
+            ssl_keyfile=config.ratelimit.redis_tls_key,
+            ssl_ca_certs=config.ratelimit.redis_tls_ca,
+            ssl_cert_reqs="required",
+        )
+    else:
+        redis_client = redis.Redis(
+            host=config.ratelimit.redis_host,
+            port=config.ratelimit.redis_port,
+            db=config.ratelimit.redis_db,
+            decode_responses=True,
+        )
     binder.bind(
         RateLimiter,
         RateLimiter(
