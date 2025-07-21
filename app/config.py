@@ -37,14 +37,19 @@ class ConfigUvicorn(BaseModel):
 
 class ConfigRateLimiter(BaseModel):
     enabled: bool = Field(default=False)
+    default_reqs: int = Field(default=100, gt=0)
+    default_window: int = Field(default=60, gt=0)
+    circuit_break_threshold: int = Field(default=10, gt=0)
+    circuit_break_window: int = Field(default=60, gt=0)
+    circuit_break_duration: int = Field(default=300, gt=0)
+    half_open_allowance: int = Field(default=5, gt=0)
     redis_host: str | None = Field(default=None)
     redis_port: int | None = Field(default=None, ge=0, lt=65535)
     redis_db: int = Field(default=0, ge=0)
-    redis_tls_cert: str | None = Field(default=None, description="Path to the TLS certificate for Redis")
-    redis_tls_key: str | None = Field(default=None, description="Path to the TLS key for Redis")
-    redis_tls_ca: str | None = Field(default=None, description="Path to the TLS CA file for Redis")
-    default_reqs: int = Field(default=100, gt=0)
-    default_window: int = Field(default=60, gt=0)
+    ssl: bool = Field(default=False, description="Use SSL for Redis connection")
+    cafile: str | None = Field(default=None, description="Path to the TLS CA file for Redis")
+    cert: str | None = Field(default=None, description="Path to the TLS certificate for Redis")
+    key: str | None = Field(default=None, description="Path to the TLS key for Redis")
 
 
 class ConfigTelemetry(BaseModel):

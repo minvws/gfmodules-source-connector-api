@@ -12,7 +12,12 @@ circuit_break_threshold = 10
 circuit_break_window = 60
 circuit_break_duration = 300
 half_open_allowance = 5
-
+# Redis SSL configuration
+ssl=False
+cafile=
+cert=
+key=
+check_hostname=False
 
 [telemetry]
 enabled = False
