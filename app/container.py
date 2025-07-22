@@ -10,33 +10,38 @@ from app.source_connector import SourceConnector
 
 def container_config(binder: inject.Binder) -> None:
     config = get_config()
+    ratelimit_config = config.ratelimit
 
-    if config.ratelimit.redis_tls_cert is not None:
+    if ratelimit_config.ssl:
         redis_client = redis.Redis(
-            host=config.ratelimit.redis_host,
-            port=config.ratelimit.redis_port,
-            db=config.ratelimit.redis_db,
+            host=ratelimit_config.redis_host,
+            port=ratelimit_config.redis_port,
+            db=ratelimit_config.redis_db,
             decode_responses=True,
             ssl=True,
-            ssl_certfile=config.ratelimit.redis_tls_cert,
-            ssl_keyfile=config.ratelimit.redis_tls_key,
-            ssl_ca_certs=config.ratelimit.redis_tls_ca,
+            ssl_certfile=ratelimit_config.cert,
+            ssl_keyfile=ratelimit_config.key,
+            ssl_ca_certs=ratelimit_config.cafile,
             ssl_cert_reqs="required",
         )
     else:
         redis_client = redis.Redis(
-            host=config.ratelimit.redis_host,
-            port=config.ratelimit.redis_port,
-            db=config.ratelimit.redis_db,
+            host=ratelimit_config.redis_host,
+            port=ratelimit_config.redis_port,
+            db=ratelimit_config.redis_db,
             decode_responses=True,
         )
     binder.bind(
         RateLimiter,
         RateLimiter(
             redis_client=redis_client,
-            default_reqs=config.ratelimit.default_reqs,
-            default_window=config.ratelimit.default_window,
-            enabled=config.ratelimit.enabled,
+            default_reqs=ratelimit_config.default_reqs,
+            default_window=ratelimit_config.default_window,
+            enabled=ratelimit_config.enabled,
+            circuit_break_threshold=ratelimit_config.circuit_break_threshold,
+            circuit_break_window=ratelimit_config.circuit_break_window,
+            circuit_break_duration=ratelimit_config.circuit_break_duration,
+            half_open_allowance=ratelimit_config.half_open_allowance,
         ),
     )
 

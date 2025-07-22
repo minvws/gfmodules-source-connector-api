@@ -23,6 +23,12 @@ circuit_break_window = 60
 circuit_break_duration = 300
 # Number of requests allowed in half-open state before tripping the circuit breaker
 half_open_allowance = 5
+# Redis SSL configuration
+ssl=False
+cafile=
+cert=
+key=
+check_hostname=False
 
 
 [telemetry]
