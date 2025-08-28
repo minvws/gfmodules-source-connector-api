@@ -12,8 +12,11 @@ jobs:
         python_version: ['3.11']
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Build venv package
-        uses: minvws/nl-irealisatie-generic-pipelines/.github/actions/python-venv-package@main
+        uses: minvws/action-python-venv-package@v1
         with:
           python_version: ${{ matrix.python_version }}
           package_file_name: gfmodules-source-connector-api
