@@ -29,10 +29,7 @@ RUN apt update && \
     apt install -y \
         git \
         gnupg2 \
-        libsqlite3-dev \
         build-essential \
-        postgresql-client-15 \
-        postgresql-client-common \
         curl
 
 RUN pip3 install --upgrade pip && \
