@@ -2,9 +2,6 @@
 
 set -e
 
-echo "➡️ Generating TLS certificates"
-tools/./generate_certs.sh
-
 echo "➡️ Creating the configuration file"
 if [ -e app.conf ]; then
     echo "⚠️ Configuration file already exists. Skipping."
