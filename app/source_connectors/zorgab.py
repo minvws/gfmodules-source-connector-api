@@ -14,7 +14,7 @@ class ZorgABConnector(SourceConnector):
         self.api_url: str = config.get("api_url", "")
         self.mtls_cert: str = config.get("mtls_cert", "")
         self.mtls_key: str = config.get("mtls_key", "")
-        self.mtls_ca: str = config.get("mtls_ca", "")
+        self.verify_ca: str | bool = config.get("verify_ca", True)
 
     def connect(self) -> None:
         logger.info("Connecting to Zorg AB API at", self.api_url)
@@ -22,7 +22,7 @@ class ZorgABConnector(SourceConnector):
     def enrich(self, data: Dict[str, Any]) -> Dict[str, Any]:
         if not self.api_url:
             raise ValueError("API URL is not configured")
-        if not self.mtls_cert or not self.mtls_key or not self.mtls_ca:
+        if not self.mtls_cert or not self.mtls_key:
             raise ValueError("mTLS certificates are not configured")
 
         try:
@@ -34,7 +34,7 @@ class ZorgABConnector(SourceConnector):
                     "Accept": "application/json+fhir",
                 },
                 cert=(self.mtls_cert, self.mtls_key),
-                verify=self.mtls_ca,
+                verify=self.verify_ca,
             )
 
             bundle = response.json()
