@@ -71,7 +71,9 @@ class ConfigPluginZorgAB(BaseModel):
     api_url: str | None = Field(default=None, description="Base URL for the Zorg AB API")
     mtls_cert: str | None = Field(default=None, description="Path to the mTLS certificate file")
     mtls_key: str | None = Field(default=None, description="Path to the mTLS key file")
-    mtls_ca: str | None = Field(default=None, description="Path to the mTLS CA file")
+    verify_ca: str | bool = Field(
+        default=True, description="Path to the CA file or boolean to enable/disable verification"
+    )
 
 
 class ConfigPluginKvk(BaseModel):

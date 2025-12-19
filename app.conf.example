@@ -77,7 +77,7 @@ enabled = true
 api_url = https://zab.test.aorta-zorg.nl/zab-ro/fhir
 mtls_cert = secrets/mtls-cert.pem
 mtls_key = secrets/mtls-key.pem
-mtls_ca = secrets/uzi-ca.pem
+verify_ca = secrets/uzi-ca.pem
 
 # Plugin configurations for KVK
 [plugin_kvk]
