@@ -34,7 +34,7 @@ httpx = "^0.28.1"
 ruff = "0.14.10"
 pip-audit = "^2.10.0"
 codespell = "^2.4.1"
-types-requests = "^2.32.4.20250611"
+types-requests = "^2.32.4.20260107"
 
 [build-system]
 requires = ["poetry-core"]
