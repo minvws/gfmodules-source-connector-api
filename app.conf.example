@@ -6,7 +6,7 @@ loglevel=debug
 # True if rate limiting is enabled
 enabled = False
 # Host for redis server
-redis_host = localhost
+redis_host = http://source-connector-api-redis
 # Port for redis server
 redis_port = 6379
 # Redis database number to use
@@ -33,7 +33,7 @@ check_hostname=False
 
 [telemetry]
 # Telemetry is enabled or not
-enabled = True
+enabled = False
 # Endpoint to GRPC server for telemetry
 endpoint = http://tracing:4317
 # Service name to use
@@ -43,9 +43,9 @@ tracer_name = zmodules.service.source-connector-api
 
 [stats]
 # Statsd is enabled or not
-enabled = True
+enabled = False
 # Host for statsd server
-host = 127.0.0.1
+host = graphite
 # Port for statsd server
 port = 8125
 # Module name for statsd
@@ -73,13 +73,13 @@ ssl_key_file = server.key
 
 # Plugin configurations for ZorgAB
 [plugin_zorgab]
-enabled = true
-api_url = https://zab.test.aorta-zorg.nl/zab-ro/fhir
+enabled = False
+api_url = https://example.com/fhir
 mtls_cert = secrets/mtls-cert.pem
 mtls_key = secrets/mtls-key.pem
 verify_ca = secrets/uzi-ca.pem
 
 # Plugin configurations for KVK
 [plugin_kvk]
-enabled = true
+enabled = False
 api_url = https://api.kvk.nl/api/v1/zoeken

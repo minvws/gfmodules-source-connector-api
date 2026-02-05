@@ -58,7 +58,7 @@ Both containers only differ in their init script and the default version usually
 into the container's /src dir.
 
     docker run -ti --rm -p 8520:8520 \
-      --mount type=bind,source=./app.conf.autopilot,target=/src/app.conf \
+      --mount type=bind,source=./app.conf.example,target=/src/app.conf \
       gfmodules-soiurce-connector-api:latet
 
 
