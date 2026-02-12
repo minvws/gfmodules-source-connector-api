@@ -31,7 +31,7 @@ class TestRateLimiter(unittest.TestCase):
         self.assertEqual(result.reason, "rate_limit_exceeded")
 
     def test_circuit_breaker_opens_on_errors(self) -> None:
-        self.redis.hget.side_effect = lambda key, field=None: ("half_open" if field == "state" else None)
+        self.redis.hget.side_effect = lambda key, field=None: "half_open" if field == "state" else None
 
         self.limiter.record_error("test-key")
 
@@ -48,7 +48,7 @@ class TestRateLimiter(unittest.TestCase):
         self.assertEqual(reason, "half_open_limit")
 
     def test_check_circuit_closed(self) -> None:
-        self.redis.hget.side_effect = lambda key, field=None: ("closed" if field == "state" else None)
+        self.redis.hget.side_effect = lambda key, field=None: "closed" if field == "state" else None
 
         allowed, reason = self.limiter.check_circuit("test-key")
         self.assertTrue(allowed)
@@ -83,7 +83,7 @@ class TestRateLimiter(unittest.TestCase):
 
     def test_open_circuit_within_duration_blocks(self) -> None:
         now = time.time()
-        self.redis.hget.side_effect = lambda key, field=None: ("open" if field == "state" else str(now))
+        self.redis.hget.side_effect = lambda key, field=None: "open" if field == "state" else str(now)
 
         allowed, reason = self.limiter.check_circuit("test-key")
 
@@ -110,7 +110,7 @@ class TestRateLimiter(unittest.TestCase):
         pipe.hset.assert_any_call("circuit:test-key", "tested", "0")
 
     def test_record_success_in_half_open_resets_state(self) -> None:
-        self.redis.hget.side_effect = lambda key, field=None: ("half_open" if field == "state" else None)
+        self.redis.hget.side_effect = lambda key, field=None: "half_open" if field == "state" else None
 
         pipe = self.redis.pipeline.return_value.__enter__.return_value
         self.limiter.record_success("test-key")
