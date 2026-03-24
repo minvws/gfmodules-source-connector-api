@@ -28,10 +28,10 @@ urllib3 = "^2.6.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.2"
-pytest-cov = "^7.0.0"
+pytest-cov = "^7.1.0"
 pytest-mock = "^3.15.1"
 httpx = "^0.28.1"
-ruff = "0.15.6"
+ruff = "0.15.7"
 pip-audit = "^2.10.0"
 codespell = "^2.4.2"
 types-requests = "^2.32.4.20260107"
