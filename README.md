@@ -103,3 +103,24 @@ to the port numbers and `NEW_UID` `NEW_GID` that are mentioned in the examples a
 # Using the plugin system
 You can have multiple sources (called plugins) activated. To use them, use the `/enrich/<plugin>` endpoint.
 For instance:   `/enrich/zorgab`  or `/enrich/kvk` will use the `zorgab` or `kvk` plugin respectively.
+
+## Contribution
+
+As stated in the [Disclaimer](#disclaimer) this project and all associated code serve solely as documentation and
+demonstration purposes to illustrate potential system communication patterns and architectures.
+
+For that reason we will only accept contributions that fit this goal. We do appreciate any effort from the
+community, but because our time is limited it is possible that your PR or issue is closed without a full justification.
+
+If you plan to make non-trivial changes, we recommend opening an issue beforehand where we can discuss your
+planned changes. This increases the chance that we might be able to use your contribution
+(or it avoids doing work if there are reasons why we wouldn't be able to use it).
+
+Note that all commits should be signed using a gpg key.
+
+When starting to introduce changes, it is important to leave user specific files such as IDE or text-editor settings
+outside the repository. For this, create a local `.gitignore` file and configure git like below.
+
+```bash
+git config --global core.excludesfile ~/.gitignore
+```
