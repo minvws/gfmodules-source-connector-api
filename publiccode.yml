@@ -24,13 +24,11 @@ description:
       lokalisatie en addressering' project van het Ministerie van
       Volksgezondheid, Welzijn en Sport. De FastAPI-service verrijkt
       inkomende verzoeken met organisatiegegevens uit externe bronnen via
-      een plugin-architectuur. Ingebouwde connectoren ondersteunen het
-      Zorgaanbiederbestand (ZorgAB) via mTLS en de Kamer van Koophandel
-      (KvK) API. De service bevat rate limiting voor betrouwbaar gebruik.
+      een plugin-architectuur. Ingebouwde stub-connectoren voor ZorgAB en de 
+      Kamer van Koophandel (KvK).
     features:
       - Plugin-gebaseerde verrijking van organisatiedata
-      - Connector voor ZorgAB via mTLS
-      - Connector voor de KvK API
+      - Stub-connectoren
   en:
     shortDescription: >-
       Plugin-based enrichment service that fetches organisation data from
@@ -40,13 +38,10 @@ description:
       lokalisatie en addressering' project of the Ministry of Health, Welfare
       and Sport. The FastAPI service enriches incoming requests with
       organisation data from external sources via a plugin architecture.
-      Built-in connectors support the Zorgaanbiederbestand (ZorgAB) via mTLS
-      and the Kamer van Koophandel (KvK) API. The service includes rate
-      limiting for reliable usage.
+      Built-in stub-connectors support ZorgAB and the Kamer van Koophandel (KvK).
     features:
       - Plugin-based organisation data enrichment
-      - Connector for ZorgAB via mTLS
-      - Connector for the KvK API
+      - Stub-connectors
 
 legal:
   license: EUPL-1.2
