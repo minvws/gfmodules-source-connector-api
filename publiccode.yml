@@ -1,0 +1,64 @@
+publiccodeYmlVersion: "0.5"
+name: Source Connector API
+url: https://github.com/minvws/gfmodules-source-connector-api
+platforms:
+  - web
+categories:
+  - application-development
+developmentStatus: development
+softwareType: standalone/backend
+intendedAudience:
+  countries:
+    - NL
+  scope:
+    - government
+    - healthcare
+
+description:
+  nl:
+    shortDescription: >-
+      Plugin-gebaseerde verrijkingsservice die organisatiedata ophaalt uit
+      externe registraties zoals ZorgAB en de KvK.
+    longDescription: |
+      De Source Connector API is onderdeel van het 'Generieke Functies,
+      lokalisatie en addressering' project van het Ministerie van
+      Volksgezondheid, Welzijn en Sport. De FastAPI-service verrijkt
+      inkomende verzoeken met organisatiegegevens uit externe bronnen via
+      een plugin-architectuur. Ingebouwde connectoren ondersteunen het
+      Zorgaanbiederbestand (ZorgAB) via mTLS en de Kamer van Koophandel
+      (KvK) API. De service bevat rate limiting voor betrouwbaar gebruik.
+    features:
+      - Plugin-gebaseerde verrijking van organisatiedata
+      - Connector voor ZorgAB via mTLS
+      - Connector voor de KvK API
+  en:
+    shortDescription: >-
+      Plugin-based enrichment service that fetches organisation data from
+      external registries such as ZorgAB and the KvK.
+    longDescription: |
+      The Source Connector API is part of the 'Generieke Functies,
+      lokalisatie en addressering' project of the Ministry of Health, Welfare
+      and Sport. The FastAPI service enriches incoming requests with
+      organisation data from external sources via a plugin architecture.
+      Built-in connectors support the Zorgaanbiederbestand (ZorgAB) via mTLS
+      and the Kamer van Koophandel (KvK) API. The service includes rate
+      limiting for reliable usage.
+    features:
+      - Plugin-based organisation data enrichment
+      - Connector for ZorgAB via mTLS
+      - Connector for the KvK API
+
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: Ministerie van Volksgezondheid, Welzijn en Sport
+
+maintenance:
+  type: internal
+  contacts:
+    - name: irealisatie.nl
+      email: helpdesk@irealisatie.nl
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - nl
