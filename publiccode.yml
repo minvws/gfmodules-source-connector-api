@@ -1,5 +1,5 @@
 publiccodeYmlVersion: "0.5"
-name: Source Connector API
+name: Generieke Functies Source Connector API
 url: https://github.com/minvws/gfmodules-source-connector-api
 platforms:
   - web
