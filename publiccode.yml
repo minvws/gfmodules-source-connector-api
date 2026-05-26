@@ -1,0 +1,64 @@
+publiccodeYmlVersion: "0.5"
+name: Generieke Functies Source Connector API
+url: https://github.com/minvws/gfmodules-source-connector-api
+platforms:
+  - web
+categories:
+  - application-development
+developmentStatus: development
+softwareType: standalone/backend
+intendedAudience:
+  countries:
+    - NL
+  scope:
+    - government
+    - healthcare
+
+description:
+  nl:
+    shortDescription: >-
+      Plugin-gebaseerde verrijkingsservice die organisatiedata ophaalt uit
+      externe registraties zoals ZorgAB en de KvK.
+    longDescription: |
+      De Source Connector API is onderdeel van het 'Generieke Functies,
+      lokalisatie en addressering' project van het Ministerie van
+      Volksgezondheid, Welzijn en Sport. De FastAPI-service verrijkt
+      inkomende verzoeken met organisatiegegevens uit externe bronnen via
+      een plugin-architectuur. Ingebouwde stub-connectoren voor ZorgAB en de 
+      Kamer van Koophandel (KvK).
+    features:
+      - Plugin-gebaseerde verrijking van organisatiedata
+      - Stub-connectoren
+  en:
+    shortDescription: >-
+      Plugin-based enrichment service that fetches organisation data from
+      external registries such as ZorgAB and the KvK.
+    longDescription: |
+      The Source Connector API is part of the 'Generieke Functies,
+      lokalisatie en addressering' project of the Ministry of Health, Welfare
+      and Sport. The FastAPI service enriches incoming requests with
+      organisation data from external sources via a plugin architecture.
+      Built-in stub-connectors support ZorgAB and the Kamer van Koophandel (KvK).
+    features:
+      - Plugin-based organisation data enrichment
+      - Stub-connectors
+
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: Ministerie van Volksgezondheid, Welzijn en Sport
+
+maintenance:
+  type: internal
+  contacts:
+    - name: iRealisatie - Team Generieke Functies
+      email: maintainer@irealisatie.nl
+      affiliation: Ministerie van Volksgezondheid, Welzijn en Sport
+
+organisation:
+  uri: https://www.rijksoverheid.nl/ministeries/ministerie-van-volksgezondheid-welzijn-en-sport
+  name: Ministerie van Volksgezondheid, Welzijn en Sport
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
