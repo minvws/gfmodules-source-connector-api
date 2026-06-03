@@ -86,7 +86,7 @@ class RateLimiter:
             pipe.execute()
 
         error_count = self.redis.zcard(error_count_key)
-        if error_count >= self.circuit_break_threshold:  # type: ignore
+        if error_count >= self.circuit_break_threshold:
             with self.redis.pipeline() as pipe:
                 pipe.hset(circuit_key, "state", CircuitState.OPEN.value)
                 pipe.hset(circuit_key, "opened_at", str(now))
@@ -98,7 +98,7 @@ class RateLimiter:
 
         if state == CircuitState.OPEN:
             raw = self.redis.hget(circuit_key, "opened_at")
-            opened_at = float(raw) if raw else 0.0  # type: ignore
+            opened_at = float(raw) if raw else 0.0
             if time.time() - opened_at < self.circuit_break_duration:
                 return False, "circuit_open"
 
@@ -110,7 +110,7 @@ class RateLimiter:
 
         if state == CircuitState.HALF_OPEN:
             tested_raw = self.redis.hget(circuit_key, "tested")
-            tested = int(tested_raw) if tested_raw else 0  # type: ignore
+            tested = int(tested_raw) if tested_raw else 0
 
             if tested >= self.half_open_allowance:
                 now = time.time()
